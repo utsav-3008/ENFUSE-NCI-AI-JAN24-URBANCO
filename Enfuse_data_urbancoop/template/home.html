@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Demo</title>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.4/xlsx.full.min.js"></script>
+</head>
+<body>
+    <h1>Webcam Demo</h1>
+    <video id="webcamVideo" width="640" height="480" autoplay></video>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const video = document.getElementById('webcamVideo');
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then((stream) => {
+                        // Display the webcam stream in the video element
+                        video.srcObject = stream;
+                    })
+                    .catch((error) => {
+                        console.error('Error accessing webcam:', error);
+                    });
+            } else {
+                console.error('getUserMedia is not supported in this browser.');
+            }
+        });
+    </script>
+    <button type="button" onclick="capture()">This button is not programmed to do anything right now!</button>
+
+    <div id="output"></div>
+
+    <table id="excelDataTable" border="1"></table>
+
+    <script>
+
+        function renderExcelData(data) {
+            try {
+                var workbook = XLSX.read(data, {type: 'binary'});
+                var sheetName = "2021";
+                var sheet = workbook.Sheets[sheetName];
+                var html = XLSX.utils.sheet_to_html(sheet);
+                document.getElementById('excelDataTable').innerHTML = html;
+            } catch (error) {
+                console.error('Error rendering Excel data:', error);
+            }
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'TUC_Final.xlsx', true);
+        xhr.responseType = 'arraybuffer';
+
+        xhr.onload = function(e) {
+            if (xhr.status == 200) {
+                var data = new Uint8Array(xhr.response);
+                renderExcelData(data);
+            } else {
+                console.error('Failed to fetch Excel file:', xhr.statusText);
+            }
+        };
+        xhr.send();
+    </script>
+</body>
+</html>
