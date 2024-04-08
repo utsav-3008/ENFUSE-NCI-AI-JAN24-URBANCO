@@ -37,7 +37,7 @@
             const imageDataURL = canvas.toDataURL('image/png');
             const img = document.createElement('img');
             img.src = imageDataURL;
-            document.getElementById('output').appendChild(img);
+            
             const link = document.createElement('a');
             link.href = imageDataURL;
             link.download = 'captured_image.png'; // Set the filename for the downloaded image
