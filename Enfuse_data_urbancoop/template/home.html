@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webcam Demo</title>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.4/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.4/xlsx.full.min.js"></script>
 </head>
 <body>
     <h1>Webcam Demo</h1>
@@ -26,8 +26,25 @@
                 console.error('getUserMedia is not supported in this browser.');
             }
         });
+
+        function capture() {
+            const video = document.getElementById('webcamVideo');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageDataURL = canvas.toDataURL('image/png');
+            const img = document.createElement('img');
+            img.src = imageDataURL;
+            document.getElementById('output').appendChild(img);
+            const link = document.createElement('a');
+            link.href = imageDataURL;
+            link.download = 'captured_image.png'; // Set the filename for the downloaded image
+            link.click(); // Trigger the download
+        }
     </script>
-    <button type="button" onclick="capture()">This button is not programmed to do anything right now!</button>
+    <button type="button" onclick="capture()">Click to capture</button>
 
     <div id="output"></div>
 
